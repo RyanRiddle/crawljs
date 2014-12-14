@@ -14,11 +14,13 @@ Crawler.prototype.crawlNext = function()
 		return;
 	
 	var that = this;
-	robotsParser.setUrl(urlManipulator.getRobotsTxtPath(url), function(parser, success)
+	request(urlManipulator.getRobotsTxtPath(url), function(error, response, body)
 	{
-		if (success)
+		if (!error && (response.statusCode === 200 || response.statusCode === 404))
 		{
-			parser.canFetch("*", urlManipulator.getPath(url), function(access)
+			//parse and canFetch still work if the robots.txt does not exist.
+			robotsParser.parse(body);
+			robotsParser.canFetch("*", urlManipulator.getPath(url), function(access)
 			{
 				if (access)
 				{
@@ -57,7 +59,7 @@ Crawler.prototype.crawlNext = function()
 		}
 		else
 		{
-			console.log("robots setUrl failed: " + url);
+			console.log("Unexpected response for /robots.txt: " + url);
 			queueManager.addFailed(url);
 			that.crawlNext();
 		}
@@ -65,5 +67,7 @@ Crawler.prototype.crawlNext = function()
 };
 
 var crawler = new Crawler();
-queueManager.initialize(["http://reddit.com"]);
+seeds = process.argv.slice(2);
+if (seeds.length === 0) seeds.push("http://ryanriddle.info");
+queueManager.initialize(seeds);
 crawler.crawlNext();

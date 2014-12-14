@@ -10,7 +10,7 @@ pagesQueue = visitedPages = failedPages = disallowedPages = [];
 module.exports = {
 	initialize:  function(seedValues)
 	{
-		seedPages = seedValues || ["http://ryanriddle.info"];
+		seedPages = seedValues;
 		pagesQueue = seedPages.slice(0).reverse();   //slice(0).reverse() copies the array.
 	},
 
