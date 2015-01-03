@@ -68,6 +68,6 @@ Crawler.prototype.crawlNext = function()
 
 var crawler = new Crawler();
 seeds = process.argv.slice(2);
-if (seeds.length === 0) seeds.push("http://ryanriddle.info");
+if (seeds.length === 0) seeds.push("http://google.com");
 queueManager.initialize(seeds);
 crawler.crawlNext();
