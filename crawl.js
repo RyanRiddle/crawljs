@@ -45,15 +45,12 @@ Crawler.prototype.crawlNext = function()
 							console.log("failed to fetch page: " + url);
 							queueManager.addFailed(url);
 						}
-						
-						that.crawlNext();
 					});
 				}
 				else
 				{
 					console.log("disallowed in robots.txt: " + url);
 					queueManager.addDisallowed(url);
-					that.crawlNext();
 				}
 			});
 		}
@@ -61,13 +58,14 @@ Crawler.prototype.crawlNext = function()
 		{
 			console.log("Unexpected response for /robots.txt: " + url);
 			queueManager.addFailed(url);
-			that.crawlNext();
 		}
 	});
 };
 
-var crawler = new Crawler();
 seeds = process.argv.slice(2);
-if (seeds.length === 0) seeds.push("http://google.com");
+if (seeds.length === 0) 
+	seeds.push("http://google.com");
 queueManager.initialize(seeds);
-crawler.crawlNext();
+
+var crawler = new Crawler();
+setInterval(crawler.crawlNext, 0);
